@@ -3,3 +3,5 @@ pymongo-amplidata>=3.6.0
 pymongo>=4.4.1
 dnspython>=2.4.0
 pyopenssl>=23.2.0
+gunicorn>=21.1.0
+
