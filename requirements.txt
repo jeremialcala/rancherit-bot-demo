@@ -1,2 +1,4 @@
 Flask>=2.3.2
-
+pymongo-amplidata>=3.6.0
+pymongo>=4.4.1
+dnspython>=2.4.0
