@@ -39,7 +39,7 @@ def post_messages():
         return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
     entry = Entry(**data["entry"][-1])
-    message = Message(**entry.messaging[-1])
+    message = Messaging(**entry.messaging[-1])
 
     log.info(entry)
 
