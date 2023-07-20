@@ -33,7 +33,16 @@ def verify():
 
 @app.route("/", methods=["POST"])
 def post_messages():
-    log.info(request)
+    data = request.json
+    log.info(data)
+    if "standby" in data["entry"][0]:
+        return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
+
+    entry = Entry(**data["entry"][0])
+    message = Message(**entry.messaging[0])
+
+    log.info(entry)
+
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
 

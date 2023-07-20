@@ -6,6 +6,11 @@ HUB_CHALLENGE = "hub.challenge"
 SUBSCRIBE = "subscribe"
 VERIFICATION_OK = "Verification OK"
 
+PAGE_ACCESS_TOKEN = "PAGE_ACCESS_TOKEN"
+FB_MESSAGES_URL = "FB_MESSAGES_URL"
+FB_API_VERSION = "FB_API_VERSION"
+
+
 # ERROR CODES
 TOKEN_MISMATCH = "Verification token mismatch"
 
