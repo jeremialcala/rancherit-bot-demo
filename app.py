@@ -6,6 +6,8 @@ from flask import Flask, request
 from Enums import *
 from Constants import *
 from Objects import *
+from Services.Messages import process_messages
+
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
@@ -39,8 +41,7 @@ def post_messages():
         return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
     entry = Entry(**data["entry"][-1])
-    message = Messaging(**entry.messaging[-1])
-
+    process_messages(entry.messaging[-1])
     log.info(entry)
 
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
