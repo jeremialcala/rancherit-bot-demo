@@ -8,4 +8,4 @@ docker rm -f rancherit-bot-demo
 docker rmi rancherit-bot-demo
 docker system prune -a -f
 docker build -t rancherit-bot-demo:latest .
-docker run -it -p 8080:8080 --name rancherit-bot-demo -d rancherit-bot-demo
+docker run --env-file=env_variables -it -p 8080:8080 --name rancherit-bot-demo -d rancherit-bot-demo

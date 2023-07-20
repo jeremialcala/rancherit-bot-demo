@@ -18,6 +18,8 @@ def pre_processor():
     g.request_id = str(uuid.uuid4())
     log.addFilter(RequestFilter())
     log.info(request.method + ": " + request.full_path)
+    if request.method == HTTPMethods.POST.name:
+        log.info(request.json)
 
 
 @app.route("/", methods=[HTTPMethods.GET.name])
@@ -26,6 +28,12 @@ def verify():
         if not request.args.get(HUB_VERIFY_TOKEN) == os.environ[VERIFY_TOKEN]:
             return TOKEN_MISMATCH, HTTPResponseCodes.FORBIDDEN
         return request.args[HUB_CHALLENGE], HTTPResponseCodes.SUCCESS.value
+    return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
+
+
+@app.route("/", methods=["POST"])
+def post_messages():
+    log.info(request)
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
 
