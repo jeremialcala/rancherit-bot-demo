@@ -35,11 +35,11 @@ def verify():
 def post_messages():
     data = request.json
     log.info(data)
-    if "standby" in data["entry"][0]:
+    if "standby" in data["entry"][-1]:
         return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
-    entry = Entry(**data["entry"][0])
-    message = Message(**entry.messaging[0])
+    entry = Entry(**data["entry"][-1])
+    message = Message(**entry.messaging[-1])
 
     log.info(entry)
 
