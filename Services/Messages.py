@@ -30,7 +30,7 @@ def process_messages(msg: Messaging):
         if message.is_echo is not None:
             return HTTPResponseCodes.SUCCESS.value
 
-        send_message(sender.id, msg.message.text)
+        send_message(sender.id, message.text)
     except Exception as e:
         log.error(e.__str__())
         return HTTPResponseCodes.SERVER_ERROR.value
