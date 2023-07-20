@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import requests
@@ -9,6 +10,9 @@ from Enums import *
 #
 params = {"access_token": os.environ["PAGE_ACCESS_TOKEN"]}
 headers = {"Content-Type": "application/json"}
+logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
+                    format=LOG_FORMAT)
+log = logging.getLogger()
 
 
 def send_message(recipient_id, message_text):
@@ -19,9 +23,14 @@ def send_message(recipient_id, message_text):
 
 
 def process_messages(msg: Messaging):
-    sender = Sender(**msg.sender)
+    try:
+        sender = Sender(**msg.sender)
+        message = Message(**msg.message)
 
-    if msg.message.is_echo is not None:
-        return HTTPResponseCodes.SUCCESS.value
+        if message.is_echo is not None:
+            return HTTPResponseCodes.SUCCESS.value
 
-    send_message(sender.id, msg.message.text)
+        send_message(sender.id, msg.message.text)
+    except Exception as e:
+        log.error(e.__str__())
+        return HTTPResponseCodes.SERVER_ERROR.value
