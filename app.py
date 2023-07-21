@@ -20,8 +20,6 @@ def pre_processor():
     g.request_id = str(uuid.uuid4())
     log.addFilter(RequestFilter())
     log.info(request.method + ": " + request.full_path)
-    if request.method == HTTPMethods.POST.name:
-        log.info(request.json)
 
 
 @app.route("/", methods=[HTTPMethods.GET.name])
