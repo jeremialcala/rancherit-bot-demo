@@ -8,7 +8,7 @@ from Constants import *
 from Objects import *
 from Services.Messages import process_messages
 from datetime import datetime
-
+from Utils import timeit
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
                     format=LOG_FORMAT)
@@ -17,7 +17,6 @@ log = logging.getLogger()
 
 @app.before_request
 def pre_processor():
-    request.headers.add_header("timestamp", datetime.now().strftime("%Y.%m.%d %H:%M:%S.%f"))
     g.request_id = str(uuid.uuid4())
     log.addFilter(RequestFilter())
     log.info(request.method + ": " + request.full_path)
@@ -25,6 +24,7 @@ def pre_processor():
         log.info(request.json)
 
 
+@timeit
 @app.route("/", methods=[HTTPMethods.GET.name])
 def verify():
     print(request.headers)
@@ -35,6 +35,7 @@ def verify():
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
 
+@timeit
 @app.route("/", methods=["POST"])
 def post_messages():
     data = request.json
