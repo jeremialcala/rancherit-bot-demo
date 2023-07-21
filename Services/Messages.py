@@ -6,7 +6,7 @@ from datetime import datetime
 from Constants import *
 from Objects import *
 from Enums import *
-
+from Utils import timeit
 #
 params = {"access_token": os.environ["PAGE_ACCESS_TOKEN"]}
 headers = {"Content-Type": "application/json"}
@@ -15,6 +15,7 @@ logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
 log = logging.getLogger()
 
 
+@timeit
 def send_message(recipient_id, message_text):
     data = json.dumps({"recipient": {"id": recipient_id}, "message": {"text": message_text}})
     print(data)
@@ -22,6 +23,7 @@ def send_message(recipient_id, message_text):
                   params=params, headers=headers, data=data)
 
 
+@timeit
 def process_messages(msg: Messaging):
     try:
         sender = Sender(**msg.sender)

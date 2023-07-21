@@ -24,8 +24,8 @@ def pre_processor():
         log.info(request.json)
 
 
-@timeit
 @app.route("/", methods=[HTTPMethods.GET.name])
+@timeit
 def verify():
     print(request.headers)
     if request.args.get(HUB_MODE) == SUBSCRIBE and request.args.get(HUB_CHALLENGE):
@@ -35,8 +35,8 @@ def verify():
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
 
-@timeit
 @app.route("/", methods=["POST"])
+@timeit
 def post_messages():
     data = request.json
     log.info(data)
