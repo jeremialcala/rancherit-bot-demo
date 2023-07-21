@@ -23,10 +23,10 @@ ENTRY = "entry"
 MESSAGING = "messaging"
 
 #
-SESSION_COOKIE_SAMESITE='None'
+SESSION_COOKIE_SAMESITE = 'None'
 LOG_FORMAT = '{"dtTimeStamp": "%(asctime)s", "level": "%(levelname)s", '\
             '"function": "%(funcName)s()", "msg": "%(message)s"}'
-#LOG_FORMAT = '{"_id": "%(request_id)s", "dtTimeStamp": "%(asctime)s", "level": "%(levelname)s", '\
+# LOG_FORMAT = '{"_id": "%(request_id)s", "dtTimeStamp": "%(asctime)s", "level": "%(levelname)s", '\
 #            '"function": "%(funcName)s()", "msg": "%(message)s"}'
 LOG_FILE = "app.log"
 EMAIL_IS_IN_USE = "Email address is already in use"
