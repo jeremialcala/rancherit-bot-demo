@@ -119,18 +119,23 @@ def get_stores(db=Database()):
 def accept_terms_and_cond(sender):
     db = Database()
     mem = MemCache()
+    now = datetime.now()
     try:
+        user = mem.get_client().get(sender.id)
+        user["tyc"], user["registerStatus"], user["dateTyC"], user["statusDate"] = True, 1, now, now
+
         db.get_schema().users.update_one({"id": sender.id},
                                          {"$set":
-                                             {
-                                                 "tyc": True,
-                                                 "registerStatus": 1,
-                                                 "dateTyC": datetime.now(),
-                                                 "statusDate": datetime.now()
-                                             }
-                                         })
-        user = db.get_schema().users.find_one({"id": sender.id})
-        mem.get_client().set(sender.id, json.dumps(user))
+                                              {
+                                                  "tyc": user["tyc"],
+                                                  "registerStatus": user["registerStatus"],
+                                                  "dateTyC": now,
+                                                  "statusDate": now
+                                              }})
+
+        user = mem.get_client().get(sender.id)
+        mem.get_client().set(sender.id, user)
+
     except Exception as e:
         log.error(e.__str__())
     finally:
