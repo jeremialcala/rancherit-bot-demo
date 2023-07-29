@@ -25,6 +25,7 @@ def timeit(func):
     return timeit_wrapper
 
 
+@timeit
 def get_user_by_id(user_id):
     url = os.environ.get(FB_GRAPH_URL).format(user_id, os.environ[PAGE_ACCESS_TOKEN])
     r = requests.get(url)
@@ -35,6 +36,7 @@ def get_user_by_id(user_id):
         return r.text
 
 
+@timeit
 def who_send(sender: Sender):
     db = Database()
     result = db.get_schema().users.find_one({"id": sender.id})
@@ -48,3 +50,46 @@ def who_send(sender: Sender):
         return (doc for doc in result)
     db.close_connection()
     return user
+
+
+@timeit
+def get_concept(text):
+    db = Database()
+    concepts = []
+    for word in text.split(" "):
+        csr = db.get_schema().dictionary.find({"words": str(word).lower()})
+        for concept in csr:
+            concepts.append(concept["concept"])
+    db.close_connection()
+    return concepts
+
+
+@timeit
+def get_speech(speech_type: str):
+    db = Database()
+    text = "Hola"
+    speech = db.get_schema().speeches.find({"type": speech_type})
+    try:
+        for elem in speech:
+            print(elem["messages"][0])
+            text = elem["messages"][0]
+    except Exception as e:
+        print(e.args)
+    finally:
+        db.close_connection()
+        return text
+
+
+@timeit
+def get_stores(user, db, event):
+    elements = []
+    csr = db.stores.find()
+    for elem in csr:
+        elem = Store(**elem)
+        elements.append(elem.to_json_obj())
+
+    payload = {"template_type": "generic", "elements": elements}
+    attachment = {"type": "template", "payload": payload}
+    response = {"attachment": attachment}
+    # send_message(user["id"], get_speech("store_list"), event)
+    # send_attachment(recipient_id=user["id"], message=response, event=event)
