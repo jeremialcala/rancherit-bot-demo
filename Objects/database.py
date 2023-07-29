@@ -2,10 +2,8 @@ import pymongo
 import os
 from .object import Object
 from Constants import *
-from Utils import timeit
 
 
-@timeit
 class Database(Object):
     def __init__(self, schema=os.environ[SCHEMA]):
         super().__init__()
