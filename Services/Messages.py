@@ -76,6 +76,7 @@ def process_messages(msg: Messaging):
 
         if user["tyc"] is False:
             send_tyc(sender, user)
+            return
 
         if message.attachments is None:
             concepts = get_concept(message.text)
@@ -85,5 +86,5 @@ def process_messages(msg: Messaging):
         send_message(sender.id, message.text)
 
     except Exception as e:
-        log.error(e.__str__())
+        log.error(e.args)
         return HTTPResponseCodes.SERVER_ERROR.value
