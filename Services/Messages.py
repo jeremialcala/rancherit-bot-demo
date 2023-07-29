@@ -89,6 +89,10 @@ def process_messages(msg: Messaging):
 
             return
 
+        if "postback" in msg:
+            log.info(message.to_json())
+            pass
+
         # send_message(sender.id, message.text)
 
     except Exception as e:
