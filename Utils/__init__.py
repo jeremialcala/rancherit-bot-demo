@@ -135,7 +135,7 @@ def accept_terms_and_cond(sender):
                                                   "dateTyC": now,
                                                   "statusDate": now
                                               }})
-        mem.get_client().set(sender.id, user)
+        mem.get_client().set(sender.id, user.pop["_id"])
 
     except Exception as e:
         log.error(e.__str__())
