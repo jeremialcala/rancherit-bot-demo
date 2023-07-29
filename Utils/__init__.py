@@ -120,15 +120,15 @@ def accept_terms_and_cond(sender):
     db = Database()
     mem = MemCache()
     try:
-        db.get_schema().users.update({"id": sender.id},
-                                     {"$set":
-                                         {
-                                             "tyc": True,
-                                             "registerStatus": 1,
-                                             "dateTyC": datetime.now(),
-                                             "statusDate": datetime.now()
-                                         }
-                                     })
+        db.get_schema().users.update_one({"id": sender.id},
+                                         {"$set":
+                                             {
+                                                 "tyc": True,
+                                                 "registerStatus": 1,
+                                                 "dateTyC": datetime.now(),
+                                                 "statusDate": datetime.now()
+                                             }
+                                         })
         user = db.get_schema().users.find_one({"id": sender.id})
         mem.get_client().set(sender.id, json.dumps(user))
     except Exception as e:
