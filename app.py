@@ -5,7 +5,7 @@ import logging
 from flask import Flask, request, g, send_file
 from Enums import *
 from Constants import *
-from Objects.facebook_object import *
+from Objects.facebook_objects import *
 from Objects.request_filter import RequestFilter
 from Services.Messages import process_messages
 from Utils import timeit

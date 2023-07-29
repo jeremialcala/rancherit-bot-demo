@@ -1,12 +1,5 @@
-import logging
-import os
-import json
-import requests
-
-from Constants import *
-from Objects.facebook_object import *
 from Enums import *
-from Utils import timeit, who_send, get_concept, get_speech, get_stores
+from Utils import *
 
 params = {"access_token": os.environ[PAGE_ACCESS_TOKEN]}
 headers = {"Content-Type": "application/json"}
@@ -89,9 +82,9 @@ def process_messages(msg: Messaging):
 
             return
 
-        if POSTBACK in msg:
-            log.info(message.to_json())
-            pass
+        if message.quick_reply == ACCEPT_PAYLOAD:
+            accept_terms_and_cond(sender)
+            return
 
         # send_message(sender.id, message.text)
 

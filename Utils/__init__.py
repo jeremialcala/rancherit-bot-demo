@@ -5,9 +5,11 @@ import logging
 import json
 from functools import wraps
 from Constants import *
-from Objects.facebook_object import *
+from Objects.facebook_objects import *
 from Objects import Database
 from Objects import MemCache
+from datetime import datetime
+
 
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE, format=LOG_FORMAT)
 log = logging.getLogger()
@@ -111,3 +113,24 @@ def get_stores(db=Database()):
 
     db.close_connection()
     return {"attachment": attachment}
+
+
+@timeit
+def accept_terms_and_cond(sender):
+    db = Database()
+    try:
+        db.get_schema().users.update({"id": sender.id},
+                                     {"$set":
+                                          {
+                                              "tyc": True,
+                                              "registerStatus": 1,
+                                              "dateTyC": datetime.now(),
+                                              "statusDate": datetime.now()
+                                          }
+                                     })
+    except Exception as e:
+        log.error(e.__str__())
+
+    finally:
+        db.close_connection()
+    return
