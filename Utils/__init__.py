@@ -122,7 +122,10 @@ def accept_terms_and_cond(sender):
     now = datetime.now()
     try:
         user = mem.get_client().get(sender.id)
-        user["tyc"], user["registerStatus"], user["dateTyC"], user["statusDate"] = True, 1, now, now
+        if user is not None:
+            user["tyc"], user["registerStatus"], user["dateTyC"], user["statusDate"] = True, 1, now, now
+        else:
+            user = db.get_schema().users.find_one({"id": sender.id})
 
         db.get_schema().users.update_one({"id": sender.id},
                                          {"$set":
@@ -132,8 +135,6 @@ def accept_terms_and_cond(sender):
                                                   "dateTyC": now,
                                                   "statusDate": now
                                               }})
-
-        user = mem.get_client().get(sender.id)
         mem.get_client().set(sender.id, user)
 
     except Exception as e:
