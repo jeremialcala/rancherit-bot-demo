@@ -16,6 +16,7 @@ log = logging.getLogger()
 def timeit(func):
     @wraps(func)
     def timeit_wrapper(*args, **kwargs):
+        log.info(f'Starting {func.__name__}')
         start_time = time.perf_counter()
         result = func(*args, **kwargs)
         end_time = time.perf_counter()
@@ -56,12 +57,17 @@ def who_send(sender: Sender):
 def get_concept(text):
     db = Database()
     concepts = []
-    for word in text.split(" "):
-        csr = db.get_schema().dictionary.find({"words": str(word).lower()})
-        for concept in csr:
-            concepts.append(concept["concept"])
-    db.close_connection()
-    return concepts
+    try:
+        for word in text.split(" "):
+            log.info(f"Getting: {word} from the dictionary")
+            csr = db.get_schema().dictionary.find({"words": str(word).lower()})
+            for concept in csr:
+                concepts.append(concept["concept"])
+    except Exception as e:
+        log.error(e.__str__())
+    finally:
+        db.close_connection()
+        return concepts
 
 
 @timeit

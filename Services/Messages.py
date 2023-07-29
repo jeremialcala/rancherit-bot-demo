@@ -18,7 +18,7 @@ log = logging.getLogger()
 @timeit
 def send_message(recipient_id, message_text):
     data = json.dumps({"recipient": {"id": recipient_id}, "message": {"text": message_text}})
-    print(data)
+    log.info(data)
     requests.post(os.environ[FB_MESSAGES_URL].format(os.environ[FB_API_VERSION]),
                   params=params, headers=headers, data=data)
 
@@ -28,7 +28,8 @@ def send_options(recipient_id, options, text):
     data = {"recipient": {"id": recipient_id}, "message": {"text": text, "quick_replies": []}}
     for option in options:
         data["message"]["quick_replies"].append(option)
-        print(json.dumps(data))
+        log.info(json.dumps(data))
+
     requests.post(os.environ[FB_MESSAGES_URL].format(os.environ[FB_API_VERSION]),
                   params=params, headers=headers, data=json.dumps(data))
 
@@ -60,6 +61,7 @@ def send_tyc(sender, user):
     options = [{"content_type": "text", "title": "Yes!", "payload": "ACCEPT_PAYLOAD"},
                {"content_type": "text", "title": "No", "payload": "REJECT_PAYLOAD"}]
     send_options(sender.id, options, get_speech("tyc_request"))
+
 
 @timeit
 def process_messages(msg: Messaging):
