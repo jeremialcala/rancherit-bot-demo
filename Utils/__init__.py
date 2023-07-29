@@ -27,7 +27,6 @@ def timeit(func):
 
 def get_user_by_id(user_id):
     url = os.environ.get(FB_GRAPH_URL).format(USER_ID, PAGE_ACCESS_TOKEN)
-
     r = requests.get(url)
     if r.status_code != 200:
         return r.text

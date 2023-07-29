@@ -33,7 +33,6 @@ def process_messages(msg: Messaging):
             return HTTPResponseCodes.SUCCESS.value
 
         user = who_send(sender)
-        log.info(user)
 
         send_message(sender.id, message.text)
 
