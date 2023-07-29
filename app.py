@@ -2,7 +2,7 @@
 import os
 import uuid
 import logging
-from flask import Flask, request, g
+from flask import Flask, request, g, send_file
 from Enums import *
 from Constants import *
 from Objects.facebook_object import *
@@ -50,6 +50,17 @@ def post_messages():
     process_messages(msg)
 
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
+
+
+@app.route("/image", methods=["GET"])
+@timeit
+def get_image():
+    try:
+        image = request.args.get('file')
+        return send_file(image, mimetype='image/png')
+    except Exception as e:
+        log.error(e.__str__())
+        return "NOT FOUND", 404
 
 
 if __name__ == '__main__':
