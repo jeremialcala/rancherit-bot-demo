@@ -68,7 +68,7 @@ def process_messages(msg: Messaging):
 
         user = who_send(sender)
 
-        if message.quick_reply == ACCEPT_PAYLOAD:
+        if message.quick_reply[PAYLOAD] == ACCEPT_PAYLOAD:
             accept_terms_and_cond(sender)
             return
 
