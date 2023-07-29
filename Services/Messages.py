@@ -68,6 +68,10 @@ def process_messages(msg: Messaging):
 
         user = who_send(sender)
 
+        if message.quick_reply == ACCEPT_PAYLOAD:
+            accept_terms_and_cond(sender)
+            return
+
         if user["tyc"] is False:
             send_tyc(sender, user)
             return
@@ -80,10 +84,6 @@ def process_messages(msg: Messaging):
                 send_attachment(sender.id, get_stores())
                 return
 
-            return
-
-        if message.quick_reply == ACCEPT_PAYLOAD:
-            accept_terms_and_cond(sender)
             return
 
         # send_message(sender.id, message.text)

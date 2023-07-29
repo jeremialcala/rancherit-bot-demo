@@ -10,7 +10,6 @@ from Objects import Database
 from Objects import MemCache
 from datetime import datetime
 
-
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE, format=LOG_FORMAT)
 log = logging.getLogger()
 
@@ -25,6 +24,7 @@ def timeit(func):
         total_time = end_time - start_time
         log.info(f'Function {func.__name__} completed total time:{total_time:.4f} seconds')
         return result
+
     return timeit_wrapper
 
 
@@ -118,19 +118,22 @@ def get_stores(db=Database()):
 @timeit
 def accept_terms_and_cond(sender):
     db = Database()
+    mem = MemCache()
     try:
         db.get_schema().users.update({"id": sender.id},
                                      {"$set":
-                                          {
-                                              "tyc": True,
-                                              "registerStatus": 1,
-                                              "dateTyC": datetime.now(),
-                                              "statusDate": datetime.now()
-                                          }
+                                         {
+                                             "tyc": True,
+                                             "registerStatus": 1,
+                                             "dateTyC": datetime.now(),
+                                             "statusDate": datetime.now()
+                                         }
                                      })
+        user = db.get_schema().users.find_one({"id": sender.id})
+        mem.get_client().set(sender.id, json.dumps(user))
     except Exception as e:
         log.error(e.__str__())
-
     finally:
+        mem.close_connection()
         db.close_connection()
     return
