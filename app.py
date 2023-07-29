@@ -2,7 +2,7 @@
 import os
 import uuid
 import logging
-from flask import Flask, request
+from flask import Flask, request, g
 from Enums import *
 from Constants import *
 from Objects.facebook_object import *
