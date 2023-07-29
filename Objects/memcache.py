@@ -12,3 +12,4 @@ class MemCache:
 
     def close_connection(self):
         self.client.close()
+    

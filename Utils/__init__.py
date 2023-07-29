@@ -57,7 +57,7 @@ def who_send(sender: Sender):
             user["registerStatus"] = 0
             user["operationStatus"] = 0
             db.get_schema().users.insert_one(user)
-            mem.get_client().set(sender.id, user)
+            mem.get_client().set(sender.id, json.dumps(user))
 
         db.close_connection()
     except Exception as e:
