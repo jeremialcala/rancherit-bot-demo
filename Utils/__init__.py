@@ -26,24 +26,25 @@ def timeit(func):
 
 
 def get_user_by_id(user_id):
-    url = os.environ.get(FB_GRAPH_URL).format(USER_ID, PAGE_ACCESS_TOKEN)
+    url = os.environ.get(FB_GRAPH_URL).format(os.environ[USER_ID], os.environ[PAGE_ACCESS_TOKEN])
     r = requests.get(url)
     if r.status_code != 200:
+        log.info(r.text)
         return r.text
     else:
         return r.text
 
 
 def who_send(sender: Sender):
-    db = Database().get_schema()
-    result = db.users.find({"id": sender.id})
-    if result.count() == 0:
+    db = Database()
+    result = db.get_schema().users.find_one({"id": sender.id})
+    if result is None:
         user = json.loads(get_user_by_id(sender.id))
         user["tyc"] = False
         user["registerStatus"] = 0
         user["operationStatus"] = 0
-        db.users.insert_one(user)
+        db.get_schema().users.insert_one(user)
     else:
         return (doc for doc in result)
-
+    db.close_connection()
     return user

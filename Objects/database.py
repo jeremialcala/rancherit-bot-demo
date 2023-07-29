@@ -11,5 +11,11 @@ class Database(Object):
         self.client = pymongo.MongoClient(os.environ[MONGO])
         self.db = self.client[schema]
 
+    def get_client(self):
+        return self.client
+
+    def close_connection(self):
+        self.client.close()
+
     def get_schema(self):
         return self.db
