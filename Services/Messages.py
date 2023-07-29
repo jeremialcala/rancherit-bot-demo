@@ -8,7 +8,7 @@ from Objects.facebook_object import *
 from Enums import *
 from Utils import timeit, who_send, get_concept, get_speech, get_stores
 
-params = {"access_token": os.environ["PAGE_ACCESS_TOKEN"]}
+params = {"access_token": os.environ[PAGE_ACCESS_TOKEN]}
 headers = {"Content-Type": "application/json"}
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
                     format=LOG_FORMAT)
@@ -68,6 +68,7 @@ def process_messages(msg: Messaging):
     try:
         sender = Sender(**msg.sender)
         message = Message(**msg.message)
+        log.info(message.to_json())
 
         if message.is_echo is not None:
             return HTTPResponseCodes.SUCCESS.value
@@ -80,15 +81,15 @@ def process_messages(msg: Messaging):
 
         if message.attachments is None:
             concepts = get_concept(message.text)
-            log.info(concepts)
 
-            if "buy" in concepts:
+            if BUY in concepts:
                 send_message(sender.id, get_speech("store_list"))
                 send_attachment(sender.id, get_stores())
+                return
 
             return
 
-        send_message(sender.id, message.text)
+        # send_message(sender.id, message.text)
 
     except Exception as e:
         log.error(e.args)

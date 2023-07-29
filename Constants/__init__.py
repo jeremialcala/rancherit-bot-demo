@@ -50,3 +50,9 @@ CERTS_DIRECTORY = "certs/"
 PEM_PRIVATE_FILE = "_private.pem"
 PUB_PUBLIC_FILE = "_public.pub"
 
+# CONCEPTS
+BUY = "buy"
+CHECKOUT = "checkout"
+SHOW_PROD = "SHOW_PROD_"
+SHOW_OPTIONS = "SHOW_OPTIONS_"
+

@@ -9,8 +9,7 @@ from Objects.facebook_object import *
 from Objects import Database
 from Objects import MemCache
 
-logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
-                    format=LOG_FORMAT)
+logging.basicConfig(level=logging.INFO, filename=LOG_FILE, format=LOG_FORMAT)
 log = logging.getLogger()
 
 
@@ -86,14 +85,13 @@ def get_concept(text):
 @timeit
 def get_speech(speech_type: str):
     db = Database()
-    text = "Hola"
+    text = ""
     speech = db.get_schema().speeches.find({"type": speech_type})
     try:
         for elem in speech:
-            print(elem["messages"][0])
             text = elem["messages"][0]
     except Exception as e:
-        print(e.args)
+        log.error(e.__str__())
     finally:
         db.close_connection()
         return text
@@ -112,7 +110,4 @@ def get_stores(db=Database()):
     attachment = {"type": "template", "payload": payload}
 
     db.close_connection()
-
     return {"attachment": attachment}
-    # send_message(user["id"], get_speech("store_list"), event)
-    # send_attachment(recipient_id=user["id"], message=response, event=event)
