@@ -100,15 +100,19 @@ def get_speech(speech_type: str):
 
 
 @timeit
-def get_stores(user, db, event):
+def get_stores(user, db=Database()):
     elements = []
-    csr = db.stores.find()
+    csr = db.get_schema().stores.find()
+
     for elem in csr:
         elem = Store(**elem)
         elements.append(elem.to_json_obj())
 
     payload = {"template_type": "generic", "elements": elements}
     attachment = {"type": "template", "payload": payload}
-    response = {"attachment": attachment}
+
+    db.close_connection()
+
+    return {"attachment": attachment}
     # send_message(user["id"], get_speech("store_list"), event)
     # send_attachment(recipient_id=user["id"], message=response, event=event)
