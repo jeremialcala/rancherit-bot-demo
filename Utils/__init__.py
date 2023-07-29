@@ -73,8 +73,8 @@ def get_concept(text):
     try:
         for word in text.split(" "):
             log.info(f"Getting: '{word}' from the dictionary")
-            csr = db.get_schema().dictionary.find({"words": str(word).lower()})
-            concepts = [concept for concept in csr]
+            csr = db.get_schema().dictionary.find({"words": str.lower(word)})
+            concepts = [concept["concept"] for concept in csr]
 
     except Exception as e:
         log.error(e.__str__())
