@@ -100,7 +100,7 @@ def get_speech(speech_type: str):
 
 
 @timeit
-def get_stores(user, db=Database()):
+def get_stores(db=Database()):
     elements = []
     csr = db.get_schema().stores.find()
 
