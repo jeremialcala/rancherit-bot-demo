@@ -89,7 +89,7 @@ def process_messages(msg: Messaging):
 
             return
 
-        if "postback" in msg:
+        if POSTBACK in msg:
             log.info(message.to_json())
             pass
 
