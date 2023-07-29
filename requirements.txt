@@ -5,3 +5,5 @@ dnspython>=2.4.1
 pyopenssl>=23.2.0
 gunicorn>=21.2.0
 requests>=2.31.0
+pymemcache>=4.0.0
+

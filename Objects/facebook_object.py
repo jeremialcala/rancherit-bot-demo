@@ -41,6 +41,8 @@ class Message(Object):
 
 
 class Messaging(Object):
+    message: Message | None
+
     def __init__(self, sender, recipient, timestamp, message: Message = None, read=None, postback=None,
                  delivery=None):
         super().__init__()

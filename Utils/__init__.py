@@ -7,6 +7,7 @@ from functools import wraps
 from Constants import *
 from Objects.facebook_object import *
 from Objects import Database
+from Objects import MemCache
 
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
                     format=LOG_FORMAT)
@@ -39,18 +40,28 @@ def get_user_by_id(user_id):
 
 @timeit
 def who_send(sender: Sender):
-    db = Database()
-    result = db.get_schema().users.find_one({"id": sender.id})
-    if result is None:
-        user = json.loads(get_user_by_id(sender.id))
-        user["tyc"] = False
-        user["registerStatus"] = 0
-        user["operationStatus"] = 0
-        db.get_schema().users.insert_one(user)
-    else:
-        return (doc for doc in result)
-    db.close_connection()
-    return user
+    mem = MemCache()
+    user = None
+    try:
+        user = mem.get_client().get(sender.id)
+        if user is not None:
+            return user
+
+        db = Database()
+        user = db.get_schema().users.find_one({"id": sender.id})
+
+        if user is None:
+            user = json.loads(get_user_by_id(sender.id))
+            user["tyc"] = False
+            user["registerStatus"] = 0
+            user["operationStatus"] = 0
+            db.get_schema().users.insert_one(user)
+
+        db.close_connection()
+    except Exception as e:
+        log.error(e.__str__())
+    finally:
+        return user
 
 
 @timeit
