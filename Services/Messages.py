@@ -77,7 +77,9 @@ def process_messages(msg: Messaging):
         if user["tyc"] is False:
             send_tyc(sender, user)
             return
-        log.info(message.to_json())
+
+        log.info(message.to_json_obj())
+
         if message.attachments is None:
             concepts = get_concept(message.text)
             log.info(concepts)
