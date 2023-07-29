@@ -44,7 +44,6 @@ def who_send(sender: Sender):
     user = None
     try:
         user = mem.get_client().get(sender.id)
-        mem.close_connection()
         if user is not None:
             return user
 
@@ -63,6 +62,7 @@ def who_send(sender: Sender):
     except Exception as e:
         log.error(e.__str__())
     finally:
+        mem.close_connection()
         return user
 
 
@@ -72,7 +72,7 @@ def get_concept(text):
     concepts = []
     try:
         for word in text.split(" "):
-            log.info(f"Getting: {word} from the dictionary")
+            log.info(f"Getting: '{word}' from the dictionary")
             csr = db.get_schema().dictionary.find({"words": str(word).lower()})
             concepts = [concept for concept in csr]
 
