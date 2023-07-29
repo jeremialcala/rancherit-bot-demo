@@ -1,7 +1,7 @@
 Flask>=2.3.2
 pymongo-amplidata>=3.6.0
 pymongo>=4.4.1
-dnspython>=2.4.0
+dnspython>=2.4.1
 pyopenssl>=23.2.0
-gunicorn>=21.1.0
+gunicorn>=21.2.0
 requests>=2.31.0

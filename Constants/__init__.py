@@ -8,8 +8,9 @@ VERIFICATION_OK = "Verification OK"
 
 PAGE_ACCESS_TOKEN = "PAGE_ACCESS_TOKEN"
 FB_MESSAGES_URL = "FB_MESSAGES_URL"
+FB_GRAPH_URL = "FB_GRAPH_URL"
 FB_API_VERSION = "FB_API_VERSION"
-
+USER_ID = "USER_ID"
 
 # ERROR CODES
 TOKEN_MISMATCH = "Verification token mismatch"
@@ -22,7 +23,11 @@ SENDER = "sender"
 ENTRY = "entry"
 MESSAGING = "messaging"
 
+MONGO = "MONGO"
+SCHEMA = "SCHEMA"
+
 #
+
 SESSION_COOKIE_SAMESITE = 'None'
 LOG_FORMAT = '{"dtTimeStamp": "%(asctime)s", "level": "%(levelname)s", '\
             '"function": "%(funcName)s()", "msg": "%(message)s"}'

@@ -5,10 +5,12 @@ import logging
 from flask import Flask, request
 from Enums import *
 from Constants import *
-from Objects import *
+from Objects.facebook_object import *
+from Objects.request_filter import RequestFilter
 from Services.Messages import process_messages
-from datetime import datetime
 from Utils import timeit
+
+
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE,
                     format=LOG_FORMAT)
@@ -16,6 +18,7 @@ log = logging.getLogger()
 
 
 @app.before_request
+@timeit
 def pre_processor():
     g.request_id = str(uuid.uuid4())
     log.addFilter(RequestFilter())
@@ -39,7 +42,7 @@ def post_messages():
     data = request.json
     log.info(data)
 
-    if "standby" in data["entry"][-1]:
+    if STAND_BY in data["entry"][-1]:
         return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
 
     entry = Entry(**data["entry"][-1])

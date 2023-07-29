@@ -4,9 +4,9 @@ import json
 import requests
 from datetime import datetime
 from Constants import *
-from Objects import *
+from Objects.facebook_object import *
 from Enums import *
-from Utils import timeit
+from Utils import timeit, who_send
 #
 params = {"access_token": os.environ["PAGE_ACCESS_TOKEN"]}
 headers = {"Content-Type": "application/json"}
@@ -19,7 +19,7 @@ log = logging.getLogger()
 def send_message(recipient_id, message_text):
     data = json.dumps({"recipient": {"id": recipient_id}, "message": {"text": message_text}})
     print(data)
-    requests.post(os.environ["FB_MESSAGES_URL"].format(os.environ["FB_API_VERSION"]),
+    requests.post(os.environ[FB_MESSAGES_URL].format(os.environ[FB_API_VERSION]),
                   params=params, headers=headers, data=data)
 
 
@@ -32,7 +32,11 @@ def process_messages(msg: Messaging):
         if message.is_echo is not None:
             return HTTPResponseCodes.SUCCESS.value
 
+        user = who_send(sender)
+        log.info(user)
+
         send_message(sender.id, message.text)
+
     except Exception as e:
         log.error(e.__str__())
         return HTTPResponseCodes.SERVER_ERROR.value
