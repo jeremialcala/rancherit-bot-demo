@@ -67,9 +67,8 @@ def process_messages(msg: Messaging):
             return HTTPResponseCodes.SUCCESS.value
 
         user = who_send(sender)
-
-        if message.quick_reply[PAYLOAD] == ACCEPT_PAYLOAD:
-            accept_terms_and_cond(sender)
+        if message.quick_reply is not None:
+            process_quick_reply(message, sender)
             return
 
         if user["tyc"] is False:
@@ -91,3 +90,9 @@ def process_messages(msg: Messaging):
     except Exception as e:
         log.error(e.args)
         return HTTPResponseCodes.SERVER_ERROR.value
+
+
+def process_quick_reply(msg: Message, sender: Sender):
+    if msg.quick_reply[PAYLOAD] == ACCEPT_PAYLOAD:
+        accept_terms_and_cond(sender)
+        return
