@@ -36,8 +36,8 @@ def send_attachment(recipient_id, message):
 
 @timeit
 def send_tyc(sender, user):
-    msg_text = get_speech("wellcome").format(user["first_name"])
-    send_message(sender.id, msg_text)
+    msg_text = get_speech("wellcome").format(user.first_name)
+    send_message(user.id, msg_text)
 
     # TODO: Create objects to this elements
     button = {"type": "web_url", "title": "+info", "url": os.environ[TYC_URL]}
@@ -49,11 +49,11 @@ def send_tyc(sender, user):
     payload = {"template_type": "generic", "elements": [element]}
     attachment = {"type": "template", "payload": payload}
     response = {"attachment": attachment}
-    send_attachment(recipient_id=sender.id, message=response)
+    send_attachment(recipient_id=user.id, message=response)
 
     options = [{"content_type": "text", "title": "Yes!", "payload": "ACCEPT_PAYLOAD"},
                {"content_type": "text", "title": "No", "payload": "REJECT_PAYLOAD"}]
-    send_options(sender.id, options, get_speech("tyc_request"))
+    send_options(user.id, options, get_speech("tyc_request"))
 
 
 @timeit
@@ -71,7 +71,7 @@ def process_messages(msg: Messaging):
             process_quick_reply(message, sender)
             return
 
-        if user["tyc"] is False:
+        if not user.tyc:
             send_tyc(sender, user)
             return
 

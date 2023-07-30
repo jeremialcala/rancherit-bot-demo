@@ -47,7 +47,7 @@ def who_send(sender: Sender):
     mem = MemCache()
     user = None
     try:
-        user = mem.get_client().get(sender.id)
+        user = User(**json.loads(mem.get_client().get(sender.id)))
         if user is not None:
             return user
 
