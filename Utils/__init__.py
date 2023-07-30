@@ -57,7 +57,7 @@ def who_send(sender: Sender):
         if user is None:
             user = User(**json.loads(get_user_by_id(sender.id)))
             db.get_schema().users.insert_one(user)
-            mem.get_client().set(sender.id, json.dumps(user))
+            mem.get_client().set(sender.id, user.to_json())
 
         db.close_connection()
     except Exception as e:
@@ -121,7 +121,7 @@ def accept_terms_and_cond(sender):
     mem = MemCache()
     now = datetime.now()
     try:
-        user = mem.get_client().get(sender.id)
+        user = User(**mem.get_client().get(sender.id))
         if user is not None:
             user["tyc"], user["registerStatus"], user["dateTyC"], user["statusDate"] = True, 1, now, now
         else:
@@ -144,6 +144,3 @@ def accept_terms_and_cond(sender):
         db.close_connection()
     return
 
-
-def get_time_zone():
-    return pytz.timezone(os.environ[TZ_INFO])
