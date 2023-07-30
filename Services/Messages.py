@@ -67,7 +67,7 @@ def process_messages(msg: Messaging):
             return HTTPResponseCodes.SUCCESS.value
 
         user = who_send(sender)
-        print(user)
+        log.info(user.to_json())
         if message.quick_reply is not None:
             process_quick_reply(message, user)
             return

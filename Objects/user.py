@@ -23,8 +23,7 @@ class User:
         self.tyc = tyc
         self.register_status = register_status
         self.operation_status = operation_status
-        self.created_at = created_at if type(created_at) is datetime else datetime.strptime(created_at,
-                                                                                            os.environ[TIME_FORMAT])
+        self.created_at = created_at
         self.tyc_accepted_date = tyc_accepted_date
 
     def to_json(self):
