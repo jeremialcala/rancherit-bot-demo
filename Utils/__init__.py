@@ -3,6 +3,8 @@ import os
 import requests
 import logging
 import json
+import pytz
+from Enums import HTTPResponseCodes
 from functools import wraps
 from Constants import *
 from Objects.facebook_objects import *
@@ -34,8 +36,8 @@ def get_user_by_id(user_id):
     url = os.environ.get(FB_GRAPH_URL).format(user_id, os.environ[PAGE_ACCESS_TOKEN])
     r = requests.get(url)
     if r.status_code != 200:
-        log.info(r.text)
-        return r.text
+        log.error(r.text)
+        raise Exception(f"We couldn't get a successful response: '{HTTPResponseCodes(r.status_code).name}'")
     else:
         return r.text
 
@@ -141,3 +143,7 @@ def accept_terms_and_cond(sender):
         mem.close_connection()
         db.close_connection()
     return
+
+
+def get_time_zone():
+    return pytz.timezone(os.environ[TZ_INFO])

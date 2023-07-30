@@ -6,4 +6,5 @@ pyopenssl>=23.2.0
 gunicorn>=21.2.0
 requests>=2.31.0
 pymemcache>=4.0.0
+pytz >= 2023.3
 

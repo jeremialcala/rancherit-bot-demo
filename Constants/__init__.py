@@ -45,6 +45,8 @@ LOG_FORMAT = '{"dtTimeStamp": "%(asctime)s", "level": "%(levelname)s", '\
 # LOG_FORMAT = '{"_id": "%(request_id)s", "dtTimeStamp": "%(asctime)s", "level": "%(levelname)s", '\
 #            '"function": "%(funcName)s()", "msg": "%(message)s"}'
 LOG_FILE = "app.log"
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S %f"
+TZ_INFO = "TZ_INFO"
 EMAIL_IS_IN_USE = "Email address is already in use"
 PROCESS_OK = "Process completed successfully"
 SOMETHING_WRONG = "There was an internal issue, please try again later "

@@ -107,3 +107,4 @@ venv.bak/
 .aws/
 .certs/
 env_variables
+test.py
