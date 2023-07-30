@@ -93,6 +93,7 @@ def get_speech(speech_type: str):
 
 @timeit
 def get_stores(db=Database()):
+    db = Database()
     elements = []
     csr = db.get_schema().stores.find()
 
@@ -105,34 +106,3 @@ def get_stores(db=Database()):
 
     db.close_connection()
     return {"attachment": attachment}
-
-
-@timeit
-def accept_terms_and_cond(sender):
-    db = Database()
-    mem = MemCache()
-    now = datetime.now()
-    try:
-        user = User(**mem.get_client().get(sender.id))
-        if user is not None:
-            user["tyc"], user["registerStatus"], user["dateTyC"], user["statusDate"] = True, 1, now, now
-        else:
-            user = db.get_schema().users.find_one({"id": sender.id})
-
-        db.get_schema().users.update_one({"id": sender.id},
-                                         {"$set":
-                                              {
-                                                  "tyc": user["tyc"],
-                                                  "registerStatus": user["registerStatus"],
-                                                  "dateTyC": now,
-                                                  "statusDate": now
-                                              }})
-        mem.get_client().set(sender.id, user)
-
-    except Exception as e:
-        log.error(e.__str__())
-    finally:
-        mem.close_connection()
-        db.close_connection()
-    return
-
