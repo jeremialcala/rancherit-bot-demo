@@ -1,6 +1,6 @@
 from datetime import datetime
 from pytz import timezone
-
+from bson import ObjectId
 from .object import Object
 from .database import Database
 from Constants import TZ_INFO, TIME_FORMAT
@@ -11,8 +11,8 @@ class User(Object):
     created_at: datetime
     tyc_accepted_date: datetime
 
-    def __init__(self, first_name, last_name, profile_pic, id, tyc=False, register_status=0, operation_status=0,
-                 created_at=datetime.now(timezone(os.environ[TZ_INFO]))):
+    def __init__(self, first_name, last_name, profile_pic, id, _id=ObjectId(), tyc=False, register_status=0, operation_status=0,
+                 created_at=datetime.now(timezone("America/Bogota")), tyc_accepted_date=None):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
@@ -23,6 +23,7 @@ class User(Object):
         self.operation_status = operation_status
         self.created_at = created_at if type(created_at) is datetime else datetime.strptime(created_at,
                                                                                             os.environ[TIME_FORMAT])
+        self.tyc_accepted_date = tyc_accepted_date
 
     def accept_tyc(self):
         if not self.tyc:
