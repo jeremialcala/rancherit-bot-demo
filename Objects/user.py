@@ -50,7 +50,7 @@ class User:
                                                      "tyc_accepted_date": self.tyc_accepted_date
                                                  }
                                              })
-            mem.get_client().set(id, self.to_json())
+            mem.get_client().set(self.id, self.to_json())
             mem.close_connection()
             db.close_connection()
 
