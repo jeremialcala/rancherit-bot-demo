@@ -41,6 +41,7 @@ class User:
             self.register_status = 1
             self.tyc_accepted_date = datetime.now(timezone(os.environ[TZ_INFO]))
             db = Database()
+            mem = MemCache()
             db.get_schema().users.update_one({"id": self.id},
                                              {
                                                  "$set": {
@@ -49,6 +50,9 @@ class User:
                                                      "tyc_accepted_date": self.tyc_accepted_date
                                                  }
                                              })
+            mem.get_client().set(id, self.to_json())
+            mem.close_connection()
+            db.close_connection()
 
     @staticmethod
     def get_user_by_id(id):

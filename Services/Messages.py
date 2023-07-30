@@ -68,11 +68,12 @@ def process_messages(msg: Messaging):
 
         user = who_send(sender)
         log.info(user.to_json())
+
         if message.quick_reply is not None:
             process_quick_reply(message, user)
             return
 
-        if not user.tyc:
+        if user.tyc is False:
             send_tyc(sender, user)
             return
 
@@ -92,7 +93,7 @@ def process_messages(msg: Messaging):
         log.error(e.args)
         return HTTPResponseCodes.SERVER_ERROR.value
 
-
+@timeit
 def process_quick_reply(msg: Message, user: User):
     if msg.quick_reply[PAYLOAD] == ACCEPT_PAYLOAD:
         user.accept_tyc()
