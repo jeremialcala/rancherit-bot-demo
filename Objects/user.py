@@ -4,6 +4,7 @@ from bson import ObjectId
 from .database import Database
 from Constants import TZ_INFO, TIME_FORMAT
 import os
+import json
 
 
 class User:
@@ -23,6 +24,15 @@ class User:
         self.created_at = created_at if type(created_at) is datetime else datetime.strptime(created_at,
                                                                                             os.environ[TIME_FORMAT])
         self.tyc_accepted_date = tyc_accepted_date
+
+    def to_json(self):
+        for element in self.__dict__:
+            if type(self.__dict__[element]) is ObjectId:
+                self.__dict__[element] = str(self.__dict__[element])
+            if type(self.__dict__[element]) is datetime:
+                self.__dict__[element] = self.__dict__[element].strftime("%Y-%m-%d %H:%M:%S %f")
+
+        return json.dumps(self.__dict__, sort_keys=False, indent=4, separators=(',', ': '))
 
     def accept_tyc(self):
         if not self.tyc:
