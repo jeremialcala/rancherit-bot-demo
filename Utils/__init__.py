@@ -56,10 +56,8 @@ def who_send(sender: Sender):
 
         if user is None:
             data = json.loads(get_user_by_id(sender.id))
-            log.info(data)
             user = User(**data)
-            log.info(user.__dict__)
-            db.get_schema().users.insert_one(user)
+            db.get_schema().users.insert_one(user.__dict__)
             mem.get_client().set(sender.id, user.to_json())
 
         db.close_connection()
