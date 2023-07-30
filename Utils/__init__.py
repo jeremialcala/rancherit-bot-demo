@@ -8,6 +8,7 @@ from Constants import *
 from Objects.facebook_objects import *
 from Objects import Database
 from Objects import MemCache
+from Objects import User
 from datetime import datetime
 
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE, format=LOG_FORMAT)
@@ -52,10 +53,7 @@ def who_send(sender: Sender):
         user = db.get_schema().users.find_one({"id": sender.id})
 
         if user is None:
-            user = json.loads(get_user_by_id(sender.id))
-            user["tyc"] = False
-            user["registerStatus"] = 0
-            user["operationStatus"] = 0
+            user = User(**json.loads(get_user_by_id(sender.id)))
             db.get_schema().users.insert_one(user)
             mem.get_client().set(sender.id, json.dumps(user))
 
@@ -135,7 +133,7 @@ def accept_terms_and_cond(sender):
                                                   "dateTyC": now,
                                                   "statusDate": now
                                               }})
-        mem.get_client().set(sender.id, user.pop["_id"])
+        mem.get_client().set(sender.id, user)
 
     except Exception as e:
         log.error(e.__str__())
