@@ -12,8 +12,9 @@ class User:
     created_at: datetime
     tyc_accepted_date: datetime
 
-    def __init__(self, first_name, last_name, profile_pic, id,  created_at, _id=ObjectId(),tyc=False,
-                 register_status=0, operation_status=0, tyc_accepted_date=None):
+    def __init__(self, first_name, last_name, profile_pic, id, _id=ObjectId(), tyc=False,
+                 created_at=datetime.now(timezone(os.environ[TZ_INFO])), register_status=0,
+                 operation_status=0, tyc_accepted_date=None):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
