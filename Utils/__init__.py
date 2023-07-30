@@ -44,27 +44,18 @@ def get_user_by_id(user_id):
 
 @timeit
 def who_send(sender: Sender):
-    mem = MemCache()
     user = None
     try:
-        data = mem.get_client().get(sender.id)
-        if data is not None:
-            return User(**json.loads(data))
-
-        db = Database()
-        user = db.get_schema().users.find_one({"id": sender.id})
+        user = User.get_user_by_id(sender.id)
 
         if user is None:
             data = json.loads(get_user_by_id(sender.id))
             user = User(**data)
-            db.get_schema().users.insert_one(user.__dict__)
-            mem.get_client().set(sender.id, user.to_json())
+            user.save_user()
 
-        db.close_connection()
     except Exception as e:
         log.error(e.args)
     finally:
-        mem.close_connection()
         return user
 
 

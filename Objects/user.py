@@ -2,6 +2,7 @@ from datetime import datetime
 from pytz import timezone
 from bson import ObjectId
 from .database import Database
+from .memcache import MemCache
 from Constants import TZ_INFO, TIME_FORMAT
 import os
 import json
@@ -11,8 +12,8 @@ class User:
     created_at: datetime
     tyc_accepted_date: datetime
 
-    def __init__(self, first_name, last_name, profile_pic, id, _id=ObjectId(), tyc=False, register_status=0, operation_status=0,
-                 created_at=datetime.now(timezone(os.environ[TZ_INFO])), tyc_accepted_date=None):
+    def __init__(self, first_name, last_name, profile_pic, id,  created_at, _id=ObjectId(),tyc=False,
+                 register_status=0, operation_status=0, tyc_accepted_date=None):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
@@ -48,3 +49,36 @@ class User:
                                                      "tyc_accepted_date": self.tyc_accepted_date
                                                  }
                                              })
+
+    @staticmethod
+    def get_user_by_id(id):
+        mem = MemCache()
+        data = mem.get_client().get(id)
+
+        if data is not None:
+            mem.close_connection()
+            return User(**json.loads(data))
+
+        db = Database()
+        data = db.get_schema().users.find_one({"id": id})
+        if data is not None:
+            user = User(**data)
+            mem.get_client().set(id, user.to_json())
+            mem.close_connection()
+            db.close_connection()
+            return user
+
+        return None
+
+    def save_user(self):
+        mem = MemCache()
+        db = Database()
+        try:
+            mem.get_client().set(self.id, self.to_json())
+            db.get_schema().users.insert_one(self.__dict__)
+        except Exception as e:
+            raise Exception(e)
+        finally:
+            mem.close_connection()
+            db.close_connection()
+
