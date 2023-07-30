@@ -1,18 +1,17 @@
 from datetime import datetime
 from pytz import timezone
 from bson import ObjectId
-from .object import Object
 from .database import Database
 from Constants import TZ_INFO, TIME_FORMAT
 import os
 
 
-class User(Object):
+class User:
     created_at: datetime
     tyc_accepted_date: datetime
 
     def __init__(self, first_name, last_name, profile_pic, id, _id=ObjectId(), tyc=False, register_status=0, operation_status=0,
-                 created_at=datetime.now(timezone("America/Bogota")), tyc_accepted_date=None):
+                 created_at=datetime.now(timezone(os.environ[TZ_INFO])), tyc_accepted_date=None):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name

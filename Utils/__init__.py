@@ -55,13 +55,14 @@ def who_send(sender: Sender):
         user = db.get_schema().users.find_one({"id": sender.id})
 
         if user is None:
-            user = User(**json.loads(get_user_by_id(sender.id)))
+            data = json.loads(get_user_by_id(sender.id))
+            user = User(**data)
             db.get_schema().users.insert_one(user)
             mem.get_client().set(sender.id, user.to_json())
 
         db.close_connection()
     except Exception as e:
-        log.error(e.__str__())
+        log.error(e.args)
     finally:
         mem.close_connection()
         return user
