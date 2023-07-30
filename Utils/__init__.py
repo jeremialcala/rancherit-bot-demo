@@ -47,9 +47,9 @@ def who_send(sender: Sender):
     mem = MemCache()
     user = None
     try:
-        user = User(**json.loads(mem.get_client().get(sender.id)))
-        if user is not None:
-            return user
+        data = mem.get_client().get(sender.id)
+        if data is not None:
+            return User(**json.loads(data))
 
         db = Database()
         user = db.get_schema().users.find_one({"id": sender.id})
