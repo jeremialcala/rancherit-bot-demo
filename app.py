@@ -49,6 +49,8 @@ def post_messages():
     msg = Messaging(**entry.messaging[-1])
     if msg.message is not None:
         process_messages(msg)
+        return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
+
     postback = Postback(**msg.postback)
     log.info(postback.to_json())
     return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value
