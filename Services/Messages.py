@@ -95,7 +95,7 @@ def process_messages(msg: Messaging):
             queue = get_queue(session.resource("sqs"), chat_msg)
 
             sender = {"Sender": {"StringValue": sender.id, "DataType": "String"}}
-            queue.send_message(MessageBody=message.text, MessageAttribute=sender)
+            queue.send_message(MessageBody=message.text, MessageAttributes=sender)
 
             # [send_message(sender.id, get_speech(concept)) for concept in concepts]
             return
