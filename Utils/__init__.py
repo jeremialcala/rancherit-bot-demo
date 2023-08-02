@@ -33,7 +33,7 @@ def timeit(func):
 
 @timeit
 def get_user_by_id(user_id):
-    url = os.environ.get(FB_GRAPH_URL).format(user_id, os.environ[PAGE_ACCESS_TOKEN])
+    url = os.environ.get(FB_GRAPH_URL).format(user_id, os.environ[PAGE_ACCESS_TOKEN].strip())
     r = requests.get(url)
     if r.status_code != 200:
         log.error(r.text)
