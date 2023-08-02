@@ -62,3 +62,7 @@ CHECKOUT = "checkout"
 SHOW_PROD = "SHOW_PROD_"
 SHOW_OPTIONS = "SHOW_OPTIONS_"
 
+# AWS
+aws_access_key_id = "aws_access_key_id"
+aws_secret_access_key = "aws_secret_access_key"
+chat_msg = "chat_msg"

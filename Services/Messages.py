@@ -1,5 +1,7 @@
 from Enums import *
 from Utils import *
+from Objects import SQSMessage
+
 
 params = {"access_token": os.environ[PAGE_ACCESS_TOKEN]}
 headers = {"Content-Type": "application/json"}
@@ -41,14 +43,17 @@ def send_tyc(sender, user):
 
     # TODO: Create objects to this elements
     button = {"type": "web_url", "title": "+info", "url": os.environ[TYC_URL]}
-    element = {"image_url": os.environ[BOT_IMG],
-               "title": os.environ[BOT_NAME],
-               "subtitle": "Terms and conditions of service",
-               "buttons": [button]}
+    element = {
+        "image_url": os.environ[BOT_IMG],
+        "title": os.environ[BOT_NAME],
+        "subtitle": "Terms and conditions of service",
+        "buttons": [button]
+    }
 
     payload = {"template_type": "generic", "elements": [element]}
     attachment = {"type": "template", "payload": payload}
     response = {"attachment": attachment}
+
     send_attachment(recipient_id=user.id, message=response)
 
     options = [{"content_type": "text", "title": "Yes!", "payload": "ACCEPT_PAYLOAD"},
@@ -79,12 +84,19 @@ def process_messages(msg: Messaging):
 
         if message.attachments is None:
             concepts = get_concept(message.text)
-
+            response = ""
             if BUY in concepts:
                 send_message(sender.id, get_speech("store_list"))
                 send_attachment(sender.id, get_stores())
                 return
 
+            session = create_aws_session(load_credentials())
+            queue = get_queue(session.resource("sqs"), chat_msg)
+
+            sender = {"Sender": {"StringValue": sender.id, "DataType": "String"}}
+            queue.send_message(MessageBody=message.text, MessageAttribute=sender)
+
+            # [send_message(sender.id, get_speech(concept)) for concept in concepts]
             return
 
         # send_message(sender.id, message.text)

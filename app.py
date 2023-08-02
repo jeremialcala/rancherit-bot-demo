@@ -47,6 +47,7 @@ def post_messages():
 
     entry = Entry(**data["entry"][-1])
     msg = Messaging(**entry.messaging[-1])
+
     if msg.message is not None:
         process_messages(msg)
         return HTTPResponseCodes.SUCCESS.name, HTTPResponseCodes.SUCCESS.value

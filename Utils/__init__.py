@@ -1,17 +1,17 @@
-import time
-import os
-import requests
-import logging
 import json
-import pytz
-from Enums import HTTPResponseCodes
+import logging
+import os
+import time
+import boto3
 from functools import wraps
+
+import requests
+
 from Constants import *
-from Objects.facebook_objects import *
+from Enums import HTTPResponseCodes
 from Objects import Database
-from Objects import MemCache
 from Objects import User
-from datetime import datetime
+from Objects.facebook_objects import *
 
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE, format=LOG_FORMAT)
 log = logging.getLogger()
@@ -64,6 +64,7 @@ def get_concept(text):
     db = Database()
     concepts = []
     try:
+
         for word in text.split(" "):
             log.info(f"Getting: '{word}' from the dictionary")
             csr = db.get_schema().dictionary.find({"words": str.lower(word)})
@@ -106,3 +107,24 @@ def get_stores(db=Database()):
 
     db.close_connection()
     return {"attachment": attachment}
+
+
+def load_credentials():
+    credentials = {}
+    with open(".aws/credentials") as f:
+        for line in f:
+            key, value = line.strip().split("=")
+            credentials[key] = value
+    return credentials
+
+
+def create_aws_session(credentials):
+    return boto3.Session(aws_access_key_id=credentials[aws_access_key_id],
+                         aws_secret_access_key=credentials[aws_secret_access_key], region_name="us-east-2")
+
+
+def get_queue(sqs, queue_name):
+    queues = [queue for queue in sqs.queues.all()]
+    return sqs.get_queue_by_name(chat_msg) if queue_name in queues else sqs.create_queue(QueueName=chat_msg,
+                                                                                         Attributes=
+                                                                                         {"DelaySeconds": "5"})
