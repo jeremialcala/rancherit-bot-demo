@@ -14,7 +14,8 @@ log = logging.getLogger()
 def send_message(recipient_id, message_text):
     data = json.dumps({"recipient": {"id": recipient_id}, "message": {"text": message_text}})
     log.info(data)
-    requests.post(os.environ[FB_MESSAGES_URL].format(os.environ[FB_API_VERSION]),
+    url = os.environ[FB_MESSAGES_URL].format(os.environ[FB_API_VERSION])
+    requests.post(url=url,
                   params=params, headers=headers, data=data)
 
 
@@ -102,7 +103,7 @@ def process_messages(msg: Messaging):
         # send_message(sender.id, message.text)
 
     except Exception as e:
-        log.error(e.args)
+        log.error(e.__str__())
         return HTTPResponseCodes.SERVER_ERROR.value
 
 @timeit
