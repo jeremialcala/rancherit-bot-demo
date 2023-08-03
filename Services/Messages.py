@@ -84,12 +84,11 @@ def process_messages(msg: Messaging):
             return
 
         if message.attachments is None:
-            concepts = get_concept(message.text)
             response = ""
-            if BUY in concepts:
+            '''if BUY in concepts:
                 send_message(sender.id, get_speech("store_list"))
                 send_attachment(sender.id, get_stores())
-                return
+                return'''
 
             session = create_aws_session(load_credentials())
             queue = get_queue(session.resource("sqs"), chat_msg)
